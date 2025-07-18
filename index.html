@@ -1,0 +1,1200 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <meta charset="UTF-8">
+  <title>Quantum </title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=UnifrakturCook&display=swap" rel="stylesheet">
+
+   <style>
+   body {
+  background-color: #000;
+  background-image: 
+    radial-gradient(white 1px, transparent 0),
+    radial-gradient(#0ff 1px, transparent 0),
+    radial-gradient(#fff 1px, transparent 0),
+    radial-gradient(#999 1px, transparent 0),
+    radial-gradient(white 1px, transparent 0),
+    radial-gradient(#0ff 1px, transparent 0),
+    radial-gradient(#fff 1px, transparent 0),
+    radial-gradient(#999 1px, transparent 0);
+  background-size: 
+    100px 100px, 
+    150px 150px, 
+    200px 200px, 
+    250px 250px;
+  background-position: 
+    0 0, 
+    30px 60px, 
+    80px 120px, 
+    100px 200px;
+  background-repeat: repeat;
+  color: #dfefff;
+  font-family: 'UnifrakturCook', cursive;
+  line-height: 1.6;
+  padding-bottom: 60px;
+  font-size: 10px;
+}
+
+
+
+
+    @media (max-width: 600px) {
+      body {
+        font-size: 11px;
+      }
+    }
+
+    header {
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #3ab9eb;
+      box-shadow: 0 2px 10px rgba(29, 2, 71, 0.25);
+    }
+
+    header h1 {
+      font-size: 20px;
+      color: #84e3ff;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    header a {
+      color: #84e3ff;
+      font-size: 18px;
+      text-decoration: none;
+    }
+
+    .section {
+      padding: 32px 16px;
+      max-width: 850px;
+      margin: 40px auto;
+      background: rgba(0, 0, 0, 0.95);
+      border-radius: 20px;
+      box-shadow: 0 0 40px rgba(0, 217, 255, 0.12);
+       border: 1px solid #0d877d;
+    }
+
+    .section h2 {
+      font-size: 21px;
+      margin-bottom: 10px;
+      color: #84e3ff;
+    }
+
+    .section p {
+      color: #d3f2ff;
+      font-size: 13px;
+    }
+
+    .simulation-box {
+      margin-top: 18px;
+      padding: 20px;
+      background: #01010d00;
+      border: 1px solid #0d877d;
+      border-radius: 14px;
+      box-shadow: 0 0 16px rgba(0, 200, 255, 0.1);
+    }
+
+    .simulat{
+       margin-top: 18px;
+      padding: 20px;
+    }
+
+    canvas {
+      display: block;
+      margin: auto;
+      background: #0a0a1a;
+      border: 1px solid #ec6a25;
+    }
+
+    button {
+      padding: 10px 18px;
+      font-size: 11px;
+     background: linear-gradient(to right, #123540, #41aae3, #057786);
+
+      color: #040101;
+      border: 1px solid #18a191;
+      border-radius: 10px;
+      margin-top: 15px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 0 8px rgba(0, 255, 255, 0.1);
+    }
+
+    button:hover {
+      background-color: #182054;
+      color: #00f7ff;
+      box-shadow: 0 0 14px rgba(0, 255, 255, 0.3);
+    }
+
+    select {
+      padding: 7px 10px;
+   
+      color: #000607;
+      border: 1px solid #00ecff;
+      border-radius: 6px;
+      font-size: 12px;
+      margin-top: 10px;
+    }
+  </style>
+<header style="display: flex; justify-content: space-between; align-items: center; padding: 10px;">
+  <h1 style="margin: 0; font-family: 'Orbitron', sans-serif; ">
+    Quantum
+  </h1>
+  <a href="https://x.com/salwa_xi" target="_blank" style="color: #84e3ff;font-size: 24px;">
+    <i class="fab fa-x-twitter"></i>
+  </a>
+</header>
+
+
+
+
+
+  
+
+ <section class="section">
+<h2><i class="fas fa-explosion" style="color:#ff6f00;"></i> Quantum Nova</h2>
+  <p>A collapsing quantum star unleashes multiversal explosions across space, time, and probability itself.</p>
+  <div class="simulat">
+    <canvas id="novaCanvas" width="350" height="250" style="background:#000; border:1px solid rgb(0, 200, 255);"></canvas>
+    <div style="margin-top:15px;">
+      <button onclick="triggerQuantumNova()">Trigger Collapse</button>
+    </div>
+    <p id="novaResult" style="margin-top:10px; font-weight:bold;"></p>
+  </div>
+</section>
+
+<script>
+  const novaCanvas = document.getElementById("novaCanvas");
+  const novaCtx = novaCanvas.getContext("2d");
+
+  function triggerQuantumNova() {
+    novaCtx.clearRect(0, 0, novaCanvas.width, novaCanvas.height);
+    const explosionType = Math.floor(Math.random() * 4);
+    const colors = ["#f0f", "#0ff", "#ff0", "#fa8072", "#00ff7f"];
+    let frame = 0;
+
+    function drawBurst() {
+      novaCtx.fillStyle = "rgba(0,0,0,0.1)";
+      novaCtx.fillRect(0, 0, novaCanvas.width, novaCanvas.height);
+
+      for (let i = 0; i < 80; i++) {
+        const angle = Math.random() * 2 * Math.PI;
+        const radius = frame * Math.random();
+        const x = novaCanvas.width / 2 + Math.cos(angle) * radius;
+        const y = novaCanvas.height / 2 + Math.sin(angle) * radius;
+
+        novaCtx.beginPath();
+        novaCtx.arc(x, y, Math.random() * 5 + 1, 0, 2 * Math.PI);
+        novaCtx.fillStyle = colors[Math.floor(Math.random() * colors.length)];
+        novaCtx.globalAlpha = Math.random();
+        novaCtx.fill();
+      }
+
+      frame++;
+      if (frame < 60) {
+        requestAnimationFrame(drawBurst);
+      } else {
+        showResult(explosionType);
+      }
+    }
+
+    function showResult(type) {
+      const result = document.getElementById("novaResult");
+      novaCtx.globalAlpha = 1;
+
+      switch (type) {
+        case 0:
+          result.innerText = "Multiversal shockwave! Timelines destabilized.";
+          break;
+        case 1:
+          result.innerText = " Temporal echo detected. Reality folded inwards.";
+          break;
+        case 2:
+          result.innerText = " You observed too closely... Collapse locked to one reality.";
+          break;
+        case 3:
+          result.innerText = " A strange quantum entity emerged from the void.";
+          break;
+      }
+    }
+
+    drawBurst();
+  }
+</script>
+
+
+
+  
+
+
+
+
+<section class="section">
+  <h2><i class="fas fa-atom " style="color:#ff6f00;" ></i> Quantum Entanglement</h2>
+  <p>Even when one particle is on Earth and the other in space, they remain entangled, change one, the other responds instantly.</p>
+
+  <div class="simulat">
+    <canvas id="entSim2_canvas" width="360" height="160" style="background: linear-gradient(#001, #000); border:1px solid  rgb(0, 200, 255);"></canvas>
+    <div style="margin-top:15px;">
+      <button onclick="entSim2_flipState()"><i class="fas fa-retweet"></i> Flip Particle A</button>
+    </div>
+    <p id="entSim2_result" style="margin-top:10px; font-weight:bold;">
+      <i class="fas fa-satellite-dish"></i> Ready to test entanglement across space
+    </p>
+  </div>
+</section>
+
+<script>
+  const entSim2_canvas = document.getElementById("entSim2_canvas");
+  const entSim2_ctx = entSim2_canvas.getContext("2d");
+
+  let entSim2_state = true;
+  let entSim2_flash = false;
+  let entSim2_pulse = 0;
+
+  function entSim2_drawScene() {
+    const ctx = entSim2_ctx;
+    ctx.clearRect(0, 0, entSim2_canvas.width, entSim2_canvas.height);
+    const centerY = entSim2_canvas.height / 2;
+
+    // الأرض
+    ctx.fillStyle = "#0f0";
+    ctx.fillRect(40, centerY + 25, 80, 8);
+    ctx.fillStyle = "#0ff";
+    ctx.font = "12px sans-serif";
+    ctx.fillText("Earth Lab", 45, centerY + 45);
+
+    // القمر الصناعي
+    ctx.beginPath();
+    ctx.arc(280, 50, 20, 0, 2 * Math.PI);
+    ctx.fillStyle = "#666";
+    ctx.fill();
+    ctx.fillStyle = "#0ff";
+    ctx.fillText("Satellite", 250, 85);
+
+    // خط الارتباط اللحظي
+    ctx.beginPath();
+    ctx.moveTo(80, centerY + 25);
+    ctx.lineTo(280, 50);
+    ctx.strokeStyle = entSim2_flash ? "#fff" : "#0ff";
+    ctx.setLineDash([6, 6]);
+    ctx.stroke();
+    ctx.setLineDash([]);
+
+    const pulseSize = 12 + Math.sin(entSim2_pulse) * 2;
+
+    // الجسيم A
+    ctx.beginPath();
+    ctx.arc(80, centerY + 10, pulseSize, 0, 2 * Math.PI);
+    ctx.fillStyle = entSim2_state ? "#0f0" : "#f00";
+    ctx.shadowColor = entSim2_flash ? "#fff" : "#000";
+    ctx.shadowBlur = entSim2_flash ? 20 : 0;
+    ctx.fill();
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = "#fff";
+    ctx.fillText("A", 73, centerY + 35);
+
+    // الجسيم B
+    ctx.beginPath();
+    ctx.arc(280, 50, pulseSize, 0, 2 * Math.PI);
+    ctx.fillStyle = entSim2_state ? "#0f0" : "#f00";
+    ctx.shadowColor = entSim2_flash ? "#fff" : "#000";
+    ctx.shadowBlur = entSim2_flash ? 20 : 0;
+    ctx.fill();
+    ctx.shadowBlur = 0;
+    ctx.fillText("B", 273, 75);
+
+    entSim2_pulse += 0.05;
+    requestAnimationFrame(entSim2_drawScene);
+  }
+
+  function entSim2_flipState() {
+    entSim2_state = !entSim2_state;
+    entSim2_flash = true;
+    document.getElementById("entSim2_result").innerHTML =
+      `<i class="fas fa-bolt"></i> Particle A flipped on Earth → Particle B instantly changed in Space!`;
+
+    setTimeout(() => {
+      entSim2_flash = false;
+    }, 400);
+  }
+
+  entSim2_drawScene();
+</script>
+
+ <section class="section">
+  <h2><i class="fas fa-bolt"  style="color:#ff6f00;" ></i> Quantum Tunneling (Realistic)</h2>
+  <p>Experience how particles tunnel through barriers in a quantum world with energy pulses, light effects, and dynamic motion.</p>
+
+  <div class="simulat">
+    <canvas id="quantumTunnelReal" width="400" height="160" style="background: radial-gradient(#000, #111); border:1px solid rgb(0, 200, 255);"></canvas>
+    <div style="margin-top:15px;">
+      <button onclick="runQuantumTunneling()"> Attempt Tunneling</button>
+    </div>
+    <p id="quantumTunnelResult" style="margin-top:10px; font-weight:bold;">
+       Click the button to test if your particle can quantum tunnel!
+    </p>
+  </div>
+</section>
+
+<script>
+  const qtCanvas = document.getElementById("quantumTunnelReal");
+  const qtCtx = qtCanvas.getContext("2d");
+
+  const tunnelProps = {
+    radius: 10,
+    y: 80,
+    barrierX: 180,
+    barrierWidth: 30,
+    finalX: 350,
+    transparencyStep: 0.05,
+  };
+
+  function drawQuantumScene(particleX = null, opacity = 1, color = "#0ff") {
+    qtCtx.clearRect(0, 0, qtCanvas.width, qtCanvas.height);
+
+    // Background stars
+    for (let i = 0; i < 30; i++) {
+      qtCtx.fillStyle = "rgba(255,255,255,0.05)";
+      qtCtx.beginPath();
+      qtCtx.arc(Math.random() * qtCanvas.width, Math.random() * qtCanvas.height, 1, 0, 2 * Math.PI);
+      qtCtx.fill();
+    }
+
+    // Barrier
+    qtCtx.fillStyle = "rgba(255,0,0,0.4)";
+    qtCtx.fillRect(tunnelProps.barrierX, 40, tunnelProps.barrierWidth, 80);
+
+    // Destination
+    qtCtx.beginPath();
+    qtCtx.arc(tunnelProps.finalX, tunnelProps.y, 10, 0, 2 * Math.PI);
+    qtCtx.strokeStyle = "#0f0";
+    qtCtx.lineWidth = 2;
+    qtCtx.stroke();
+
+    if (particleX !== null) {
+      qtCtx.beginPath();
+      qtCtx.arc(particleX, tunnelProps.y, tunnelProps.radius, 0, 2 * Math.PI);
+      qtCtx.fillStyle = color;
+      qtCtx.globalAlpha = opacity;
+      qtCtx.shadowColor = color;
+      qtCtx.shadowBlur = 20 * opacity;
+      qtCtx.fill();
+      qtCtx.shadowBlur = 0;
+      qtCtx.globalAlpha = 1;
+    }
+  }
+
+  function runQuantumTunneling() {
+    let x = 20;
+    const speed = 2;
+    const resultText = document.getElementById("quantumTunnelResult");
+    const success = Math.random() < 0.6;
+    let opacity = 1;
+
+    function animate() {
+      if (x < (success ? tunnelProps.finalX : tunnelProps.barrierX)) {
+        if (x > tunnelProps.barrierX && x < tunnelProps.barrierX + tunnelProps.barrierWidth) {
+          opacity -= tunnelProps.transparencyStep;
+        }
+        drawQuantumScene(x, opacity, success ? "#0f0" : "#0ff");
+        x += speed;
+        requestAnimationFrame(animate);
+      } else {
+        if (success) {
+          for (let i = 0; i < 3; i++) {
+            setTimeout(() => {
+              drawQuantumScene(tunnelProps.finalX, 1, "#0f0");
+            }, i * 100);
+          }
+          resultText.innerHTML = "<strong>Quantum tunneling successful!</strong> The particle passed through the barrier.";
+        } else {
+          bounceBack(x);
+        }
+      }
+    }
+
+    function bounceBack(xStart) {
+      let count = 0;
+      function bounce() {
+        const offset = Math.sin(count * 0.5) * 6;
+        drawQuantumScene(xStart - offset, 1, "#999");
+        count++;
+        if (count < 12) {
+          requestAnimationFrame(bounce);
+        } else {
+          resultText.innerHTML = "<strong>Quantum tunneling failed.</strong> The particle reflected off the barrier.";
+        }
+      }
+      bounce();
+    }
+
+    animate();
+  }
+
+  // Initial draw
+  drawQuantumScene();
+</script>
+
+<!-- FontAwesome for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+
+  
+<section class="section">
+<h2><i class="fas fa-globe" style="color:#ff6f00;"></i> Quantum Pulse Planet</h2>
+  <p>This mysterious planet pulses in a superposition state. Observe it, and it collapses into reality…</p>
+  <div class="simulat">
+    <canvas id="pulseCanvas" width="300" height="300" style="background:#000; border:1px solid  rgb(0, 200, 255);"></canvas>
+    <div style="margin-top:15px;">
+      <button onclick="pulsePlanet()"> Begin Observation</button>
+      <label style="margin-left:10px;">
+        <input type="checkbox" id="observePlanet"> Observe
+      </label>
+    </div>
+    <p id="pulseResult" style="margin-top:10px; font-weight:bold;"></p>
+  </div>
+</section>
+
+<script>
+  const pulseCanvas = document.getElementById("pulseCanvas");
+  const pulseCtx = pulseCanvas.getContext("2d");
+
+  function pulsePlanet() {
+    pulseCtx.clearRect(0, 0, pulseCanvas.width, pulseCanvas.height);
+    const observe = document.getElementById("observePlanet").checked;
+    let frame = 0;
+    let radius = 30;
+    let pulsing = true;
+
+    function draw() {
+      pulseCtx.clearRect(0, 0, pulseCanvas.width, pulseCanvas.height);
+
+      // Background stars
+      for (let i = 0; i < 20; i++) {
+        pulseCtx.beginPath();
+        pulseCtx.arc(Math.random() * 300, Math.random() * 300, 1.2, 0, 2 * Math.PI);
+        pulseCtx.fillStyle = "#0ff";
+        pulseCtx.fill();
+      }
+
+      // Planet
+      pulseCtx.beginPath();
+      pulseCtx.arc(150, 150, radius, 0, 2 * Math.PI);
+      pulseCtx.fillStyle = `hsl(${frame * 4 % 360}, 100%, 50%)`;
+      pulseCtx.shadowBlur = 20;
+      pulseCtx.shadowColor = "#0ff";
+      pulseCtx.fill();
+      pulseCtx.shadowBlur = 0;
+
+      if (observe && frame === 60) {
+        // collapse
+        pulseCtx.beginPath();
+        pulseCtx.arc(150, 150, radius, 0, 2 * Math.PI);
+        pulseCtx.fillStyle = "#f0f";
+        pulseCtx.fill();
+        pulseCtx.shadowBlur = 30;
+        pulseCtx.shadowColor = "#f0f";
+        pulseCtx.fill();
+        document.getElementById("pulseResult").innerText =
+          "You observed the quantum planet. It collapsed into a fixed glowing form.";
+        return;
+      }
+
+      radius = 30 + Math.sin(frame * 0.2) * 10;
+      frame++;
+
+      if (frame < 120 && !observe) {
+        requestAnimationFrame(draw);
+        document.getElementById("pulseResult").innerText = "The planet pulses… countless states coexist.";
+      } else if (!observe) {
+        document.getElementById("pulseResult").innerText =
+          " You didn’t observe... and the planet remained undefined.";
+      }
+    }
+
+    draw();
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+<section class="section">
+<h2><i class="fas fa-rotate fa-spin" style="color:#ff6f00;"></i> Quantum Spacetime Vortex</h2>
+  <p>Enter a swirling quantum vortex where particles bend space, twist time, and obey no logic but quantum rules!</p>
+  <div class="simulat">
+    <canvas id="vortexCanvas" width="300" height="300" style="background:#000; border:1px solid  rgb(0, 200, 255);"></canvas>
+    <div style="margin-top:15px;">
+      <button onclick="startVortex()">Enter the Vortex</button>
+      <label style="margin-left:10px;">
+        <input type="checkbox" id="observeVortex"> Observe Collapse
+      </label>
+    </div>
+    <p id="vortexResult" style="margin-top:10px; font-weight:bold;"></p>
+  </div>
+</section>
+
+
+<script>
+  const vortexCanvas = document.getElementById("vortexCanvas");
+  const vortexCtx = vortexCanvas.getContext("2d");
+
+  function startVortex() {
+    vortexCtx.clearRect(0, 0, vortexCanvas.width, vortexCanvas.height);
+    let angle = 0;
+    let radius = 120;
+    let collapse = document.getElementById("observeVortex").checked;
+    let frame = 0;
+
+    function draw() {
+      vortexCtx.fillStyle = "rgba(0, 0, 0, 0.1)";
+      vortexCtx.fillRect(0, 0, vortexCanvas.width, vortexCanvas.height);
+
+      const x = vortexCanvas.width / 2 + Math.cos(angle) * radius;
+      const y = vortexCanvas.height / 2 + Math.sin(angle) * radius;
+
+      vortexCtx.beginPath();
+      vortexCtx.arc(x, y, collapse ? 6 : Math.random() * 8 + 2, 0, 2 * Math.PI);
+      vortexCtx.fillStyle = collapse ? "#f0f" : `hsl(${angle * 100}, 100%, 50%)`;
+      vortexCtx.fill();
+
+      angle += 0.2;
+      radius *= 0.98;
+
+      frame++;
+      if (radius > 10) {
+        requestAnimationFrame(draw);
+      } else {
+        vortexCtx.beginPath();
+        vortexCtx.arc(vortexCanvas.width / 2, vortexCanvas.height / 2, 20, 0, 2 * Math.PI);
+        vortexCtx.strokeStyle = collapse ? "#ff0" : "#0ff";
+        vortexCtx.lineWidth = 2;
+        vortexCtx.stroke();
+
+        document.getElementById("vortexResult").innerText =
+          collapse ? "You observed it... and it collapsed into a single point." : 
+                     "The vortex faded... infinite states remain.";
+      }
+    }
+
+    draw();
+  }
+</script>
+
+
+
+
+
+
+  <section class="section">
+<h2><i class="fas fa-microscope"  style="color:#ff6f00;"></i> Heisenberg's Uncertainty Principle</h2>
+    <p>You cannot precisely measure both the position and momentum of a particle at the same time.</p>
+    <div class="simulat">
+      <canvas id="uncertaintyCanvas" width="300" height="100" style="background:#111; border:1px solid  rgb(0, 200, 255);"></canvas>
+      <div style="margin-top:15px;">
+        <button onclick="measurePosition()"> Measure Position</button>
+        <button onclick="measureVelocity()"> Measure Velocity</button>
+      </div>
+      <p id="uncertaintyResult" style="margin-top:10px; font-weight:bold;"></p>
+    </div>
+  </section>
+
+  <script>
+    const canvas = document.getElementById('uncertaintyCanvas');
+    const ctx = canvas.getContext('2d');
+    let x = 150, v = 2;
+
+    function drawParticle(posNoise = 0, velNoise = 0) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const trueX = x + (Math.random() * posNoise - posNoise / 2);
+      ctx.beginPath();
+      ctx.arc(trueX, canvas.height / 2, 10, 0, 2 * Math.PI);
+      ctx.fillStyle = "#0ff";
+      ctx.fill();
+    }
+
+    function measurePosition() {
+      drawParticle(0, 20); // Accurate position, noisy velocity
+      const noisyV = (v + (Math.random() * 4 - 2)).toFixed(2);
+      document.getElementById('uncertaintyResult').innerText = `Position measured accurately. Velocity appears uncertain: ~${noisyV} px/frame`;
+    }
+
+    function measureVelocity() {
+      drawParticle(30, 0); // Noisy position, accurate velocity
+      document.getElementById('uncertaintyResult').innerText = `Velocity measured accurately: ${v.toFixed(2)} px/frame. Position appears fuzzy.`;
+    }
+
+    setInterval(() => {
+      x += v;
+      if (x > canvas.width - 10 || x < 10) v *= -1;
+      drawParticle(10, 0);
+    }, 100);
+  </script>
+
+
+
+
+<section class="section">
+<h2><i class="fas fa-layer-group" style="color:#ff6f00;"></i> Superposition</h2>
+  <p>Watch a quantum particle enter a gateway and exist in many places... until you observe it!</p>
+  <div class="simulat">
+<canvas id="superCanvas" width="350" height="200" style="background:#000; border:1px solid  rgb(0, 200, 255);; border-radius: 0px;"></canvas>
+    <div style="margin-top:15px;">
+      <button onclick="launchSuperParticle()"> Launch Particle</button>
+      <label style="margin-left:10px;"><input type="checkbox" id="observeSuper">Observe</label>
+    </div>
+    <p id="superResult" style="margin-top:10px; font-weight:bold;"></p>
+  </div>
+</section>
+<script>
+  const superCanvas = document.getElementById("superCanvas");
+  const superCtx = superCanvas.getContext("2d");
+
+  function launchSuperParticle() {
+    const observe = document.getElementById("observeSuper").checked;
+    superCtx.clearRect(0, 0, superCanvas.width, superCanvas.height);
+
+    const particleCount = observe ? 1 : 8;
+    const centerY = superCanvas.height / 2;
+    let t = 0;
+    let frame = 0;
+    const colors = ["#0ff", "#f0f", "#ff0", "#0f0", "#ff6600", "#00bcd4"];
+    const trails = [];
+
+    for (let i = 0; i < particleCount; i++) {
+      const x = 50 + i * 30 + Math.random() * 10;
+      trails.push({
+        x: x,
+        y: centerY,
+        color: colors[i % colors.length],
+        opacity: 1,
+        radius: 8 + Math.random() * 4,
+        dx: Math.random() * 1.5 - 0.75,
+        dy: Math.random() * 1.5 - 0.75
+      });
+    }
+
+    function animate() {
+      frame++;
+      superCtx.fillStyle = "rgba(11,12,42, 0.1)";
+      superCtx.fillRect(0, 0, superCanvas.width, superCanvas.height);
+
+      for (let p of trails) {
+        p.x += p.dx;
+        p.y += p.dy;
+        p.opacity *= 0.985;
+
+        superCtx.beginPath();
+        superCtx.arc(p.x, p.y + Math.sin(t + p.x * 0.05) * 4, p.radius, 0, 2 * Math.PI);
+        superCtx.fillStyle = p.color;
+        superCtx.globalAlpha = p.opacity;
+        superCtx.shadowColor = p.color;
+        superCtx.shadowBlur = observe ? 30 : 15;
+        superCtx.fill();
+        superCtx.shadowBlur = 0;
+      }
+
+      superCtx.globalAlpha = 1;
+      t += 0.05;
+
+      if (frame < 150 && trails.some(p => p.opacity > 0.02)) {
+        requestAnimationFrame(animate);
+      } else {
+        superCtx.globalAlpha = 1;
+        if (observe) {
+          const finalX = trails[0].x.toFixed(1);
+          document.getElementById("superResult").innerText = `Collapse complete. Particle locked at x=${finalX}`;
+        } else {
+          document.getElementById("superResult").innerText = "Superposition state faded into the quantum void...";
+        }
+      }
+    }
+
+    animate();
+  }
+</script>
+
+
+
+ 
+
+
+<section class="section">
+<h2><i class="fas fa-cat" style="color:#ff6f00;"></i> Schrödinger's cat</h2>
+  <p>You are now inside a sealed quantum lab. On the metal table lies a mysterious black box...</p>
+
+  <div class="simulation-box" style="text-align:center;">
+    <div id="labScene">
+      <i id="boxIcon" class="fas fa-cube fa-6x" style="color:rgb(0, 195, 255);"></i>
+      <p id="labDescription" style="margin-top:10px;">The box contains:</p>
+      <ul style="text-align:left; display: inline-block;">
+        <li><i class="fas fa-cat"></i> A living cat</li>
+        <li><i class="fas fa-atom"></i> A radioactive atom (50% decay chance)</li>
+        <li><i class="fas fa-flask"></i> A glass vial of poison</li>
+        <li><i class="fas fa-microchip"></i> A detector that triggers poison release if decay is detected</li>
+      </ul>
+    </div>
+
+    <button id="observeBtn" onclick="startObservation()" style="margin-top:20px;">
+      <i class="fas fa-eye"></i> Begin Observation
+    </button>
+
+    <div id="labResult" style="margin-top:20px; font-weight:bold; font-size:18px;"></div>
+    <div id="labVisual" style="margin-top:20px; font-size:40px;"></div>
+  </div>
+</section>
+
+<script>
+  function startObservation() {
+    const observeBtn = document.getElementById("observeBtn");
+    observeBtn.disabled = true;
+    observeBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Observing...';
+
+    const boxIcon = document.getElementById("boxIcon");
+    const resultText = document.getElementById("labResult");
+    const labVisual = document.getElementById("labVisual");
+
+    resultText.innerText = "Detecting quantum state...";
+    resultText.style.color = "#0ff";
+    labVisual.innerHTML = "";
+
+    // Simulate observation delay
+    setTimeout(() => {
+      const outcome = Math.random() < 0.5;
+      boxIcon.className = "fas fa-box-open fa-6x";
+
+      if (outcome) {
+        resultText.innerText = "Observation Result: The cat is ALIVE";
+        resultText.style.color = "#0f0";
+        labVisual.innerHTML = `
+          <i class="fas fa-cat" style="color:#0f0;"></i>
+          <p style="font-size:16px; margin-top:10px;">
+            The atom <strong>did NOT decay</strong>.<br> The poison vial remained intact.<br> The cat survived!
+          </p>
+        `;
+      } else {
+        resultText.innerText = "Observation Result: The cat is DEAD";
+        resultText.style.color = "#f00";
+        labVisual.innerHTML = `
+          <i class="fas fa-skull-crossbones" style="color:#f00;"></i>
+          <p style="font-size:16px; margin-top:10px;">
+            The atom <strong>decayed</strong>.<br> The detector triggered the mechanism.<br> The poison was released and the cat died.
+          </p>
+        `;
+      }
+
+      observeBtn.innerHTML = '<i class="fas fa-redo"></i> Try Again';
+      observeBtn.disabled = false;
+      observeBtn.onclick = () => location.reload(); // reload for a new try
+    }, 2500);
+  }
+</script>
+
+
+
+
+
+<section class="section">
+<h2><i id="conceptIcon" class="fas fa-brain fa-beat" style="color:#ff6f00;"></i> Quantum Concepts Explorer</h2>
+  <p>Pick a quantum concept to explore its meaning and watch a short video explanation.</p>
+
+  <select id="conceptSelector" onchange="showConcept()" style="padding: 10px; font-size: 16px; border-radius: 8px;">
+    <option value="">-- Select a Concept --</option>
+    <option value="superposition">🔹 Superposition</option>
+    <option value="entanglement">🔹 Entanglement</option>
+    <option value="uncertainty">🔹 Uncertainty Principle</option>
+    <option value="schrodinger">🔹 Schrödinger’s Cat</option>
+    <option value="tunneling">🔹 Quantum Tunneling</option>
+    <option value="doubleSlit">🔹 Double-Slit Experiment</option>
+  </select>
+
+  <div id="conceptContent" style="margin-top: 25px;" class="simulat"></div>
+</section>
+<script>
+  const conceptData = {
+    superposition: {
+      desc: "A particle can be in multiple states (like on/off) at the same time — until it's observed!",
+      video: "https://www.youtube.com/embed/IOYyCHGWJq4"
+    },
+    entanglement: {
+      desc: "When two particles are entangled, changing one affects the other — instantly, even across space!",
+      video: "https://www.youtube.com/embed/ZuvK-od647c"
+    },
+    uncertainty: {
+      desc: "You can't measure a particle's position and momentum both precisely — the more you know one, the less you know the other.",
+      video: "https://www.youtube.com/embed/a8FTr2qMutA"
+    },
+    schrodinger: {
+      desc: "A cat in a box is both alive and dead — until someone opens it. A famous thought experiment about observation.",
+      video: "https://www.youtube.com/embed/UjaAxUO6-Uw"
+    },
+    tunneling: {
+      desc: "Particles can pass through barriers — even if they shouldn't have enough energy to do so!",
+      video: "https://www.youtube.com/embed/CBrsWPCp_rs"
+    },
+    doubleSlit: {
+      desc: "Particles act like waves and interfere with themselves — unless you're watching them!",
+      video: "https://www.youtube.com/embed/A9tKncAdlHQ"
+    }
+  };
+
+  function showConcept() {
+    const key = document.getElementById("conceptSelector").value;
+    const box = document.getElementById("conceptContent");
+
+    if (!key || !conceptData[key]) {
+      box.innerHTML = "";
+      return;
+    }
+
+    const { desc, video } = conceptData[key];
+    box.innerHTML = `
+      <p style="margin-bottom: 10px;">${desc}</p>
+      <iframe width="300" height="170" src="${video}" frameborder="0" allowfullscreen></iframe>
+    `;
+  }
+</script>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+
+
+
+
+
+
+
+
+
+
+
+<section class="section">
+<h2><i class="fas fa-scale-balanced fa-beat-fade" style="color:#ff6f00;"></i> Quantum Constants & Laws</h2>
+  <p>Select a category to explore quantum rules and constants:</p>
+  <div class="simulat" style="max-width: 600px; margin: auto;">
+    <select id="quantumCategory" onchange="displayQuantumInfo()" style="width: 100%; padding: 10px;  border-radius: 8px; background: #f9f9f9; color: rgb(0, 11, 11); border: 1px solid  rgb(0, 200, 255);;">
+      <option value="">-- Choose a Category --</option>
+      <option value="laws"> Quantum Laws</option>
+      <option value="constants"> Quantum Constants</option>
+      <option value="physicsConstants"> General Physical Constants</option>
+    </select>
+
+    <div id="quantumInfo" style="margin-top: 20px; padding: 10px; background: #111; border-radius: 10px; border: 1px solid  rgb(0, 200, 255);"></div>
+  </div>
+</section>
+
+<script>
+  const quantumData = {
+    laws: [
+      {
+        name: "Heisenberg's Uncertainty Principle",
+        formula: "Δx·Δp ≥ ℏ / 2",
+        description: "You can't measure position and momentum of a particle simultaneously with perfect accuracy."
+      },
+      {
+        name: "Superposition",
+        formula: "—",
+        description: "Quantum particles exist in multiple states until they are observed."
+      },
+      {
+        name: "Entanglement",
+        formula: "—",
+        description: "Two particles remain connected, affecting each other instantaneously over distance."
+      },
+      {
+        name: "Wave-Particle Duality",
+        formula: "λ = h / p",
+        description: "Particles like electrons show both wave and particle behavior."
+      },
+      {
+        name: "Quantum Tunneling",
+        formula: "—",
+        description: "Particles can pass through barriers even without enough classical energy."
+      }
+    ],
+    constants: [
+      {
+        name: "Planck's Constant (h)",
+        formula: "h = 6.626 × 10⁻³⁴ J·s",
+        description: "Fundamental constant in quantum mechanics."
+      },
+      {
+        name: "Reduced Planck Constant (ħ)",
+        formula: "ħ = h / 2π = 1.055 × 10⁻³⁴ J·s",
+        description: "Used in most quantum equations."
+      },
+      {
+        name: "Photon Energy",
+        formula: "E = hf",
+        description: "Energy of a photon is proportional to its frequency."
+      }
+    ],
+    physicsConstants: [
+      {
+        name: "Speed of Light (c)",
+        formula: "c = 3 × 10⁸ m/s",
+        description: "Used in quantum field theory and relativity."
+      },
+      {
+        name: "Elementary Charge (e)",
+        formula: "e = 1.602 × 10⁻¹⁹ C",
+        description: "Charge of a single electron."
+      },
+      {
+        name: "Boltzmann Constant (k)",
+        formula: "k = 1.38 × 10⁻²³ J/K",
+        description: "Links temperature with energy at the particle level."
+      }
+    ]
+  };
+
+  function displayQuantumInfo() {
+    const category = document.getElementById("quantumCategory").value;
+    const container = document.getElementById("quantumInfo");
+
+    if (!category) {
+      container.innerHTML = "";
+      return;
+    }
+
+    const items = quantumData[category];
+    let html = `<ul style="list-style: none; padding-left: 0;">`;
+    items.forEach(item => {
+      html += `
+        <li style="margin-bottom: 20px;">
+          <strong style="color:#fff;">${item.name}</strong><br>
+          <span style="color:#0ff;">${item.formula}</span><br>
+          <span style="color:#ccc;">${item.description}</span>
+        </li>
+      `;
+    });
+    html += `</ul>`;
+    container.innerHTML = html;
+  }
+</script>
+
+
+
+<section class="section">
+<h2><i class="fas fa-circle-question" style="color:#ff6f00;"></i> Quantum </h2>
+
+    <div class="simulation-box">
+      <div id="quizContainer">
+        <p id="quizQuestion">Loading...</p>
+        <form id="quizForm"></form>
+        <button onclick="nextQuestion()">Next</button>
+        <p id="quizFeedback" style="margin-top:10px; font-weight:bold;"></p>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const questions = [
+      {
+        q: " What happens when you measure a particle's position very accurately?",
+        options: [
+          "You can also measure its velocity precisely.",
+          "The particle disappears.",
+          "The particle’s velocity becomes uncertain.",
+          "It turns into energy."
+        ],
+        correct: 2
+      },
+      {
+        q: " In quantum entanglement, if you change the state of particle A...",
+        options: [
+          "Nothing happens.",
+          "Only A changes.",
+          "B changes immediately, regardless of distance.",
+          "They both vanish."
+        ],
+        correct: 2
+      },
+      {
+        q: " In quantum tunneling, how does the particle pass the barrier?",
+        options: [
+          "By gaining extra energy.",
+          "By chance it tunnels through probabilistically.",
+          "It teleports.",
+          "It breaks the barrier."
+        ],
+        correct: 1
+      },
+      {
+        q: " What makes quantum particles unique in superposition?",
+        options: [
+          "They split in half.",
+          "They exist in multiple states at once.",
+          "They stop moving.",
+          "They become visible."
+        ],
+        correct: 1
+      },
+      {
+        q: " Which of the following is NOT a quantum concept?",
+        options: [
+          "Quantum Entanglement",
+          "Superposition",
+          "Heisenberg's Uncertainty",
+          "Newtonian Gravity"
+        ],
+        correct: 3
+      }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    function loadQuestion() {
+      const q = questions[currentQuestion];
+      document.getElementById("quizQuestion").innerText = q.q;
+
+      const form = document.getElementById("quizForm");
+      form.innerHTML = "";
+
+      q.options.forEach((option, index) => {
+        const label = document.createElement("label");
+        label.innerHTML = `<input type="radio" name="answer" value="${index}"> ${option}`;
+        form.appendChild(label);
+        form.appendChild(document.createElement("br"));
+      });
+
+      document.getElementById("quizFeedback").innerText = "";
+    }
+
+    function nextQuestion() {
+      const choices = document.getElementsByName('answer');
+      let selected = -1;
+      for (let i = 0; i < choices.length; i++) {
+        if (choices[i].checked) {
+          selected = parseInt(choices[i].value);
+          break;
+        }
+      }
+
+      if (selected === -1) {
+        document.getElementById("quizFeedback").innerText = " Please select an answer.";
+        document.getElementById("quizFeedback").style.color = "#ff0";
+        return;
+      }
+
+      if (selected === questions[currentQuestion].correct) {
+        score++;
+        document.getElementById("quizFeedback").innerText = " Correct!";
+        document.getElementById("quizFeedback").style.color = "#0f0";
+      } else {
+        document.getElementById("quizFeedback").innerText = " Incorrect!";
+        document.getElementById("quizFeedback").style.color = "#f00";
+      }
+
+      currentQuestion++;
+
+      if (currentQuestion < questions.length) {
+        setTimeout(loadQuestion, 1000);
+      } else {
+        setTimeout(() => {
+          document.getElementById("quizContainer").innerHTML =
+            `<h3>Quiz Complete!</h3><p>Your Score: ${score} / ${questions.length}</p>`;
+        }, 1200);
+      }
+    }
+
+    // Load the first question on page load
+    loadQuestion();
+  </script>
+
+
+
+<section class="section">
+  <h2><i class="fas fa-book-reader" style="color:#ff6f00;"></i> Explore Quantum Realms</h2>
+  <p style="margin-bottom: 20px;">Click a site to explore trusted resources about quantum physics and concepts.</p>
+  <div style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;">
+    
+    <!-- Site 1 -->
+    <div class="book-card" onclick="showSite(0)">
+      <i class="fas fa-book-open-reader fa-3x"></i>
+      <p style="margin-top: 10px;">Quantum Country</p>
+    </div>
+
+    <!-- Site 2 -->
+    <div class="book-card" onclick="showSite(1)">
+      <i class="fas fa-glasses fa-3x"></i>
+      <p style="margin-top: 10px;">Feynman's Lectures</p>
+    </div>
+
+    <!-- Site 3 -->
+    <div class="book-card" onclick="showSite(2)">
+      <i class="fas fa-newspaper fa-3x"></i>
+      <p style="margin-top: 10px;">Quantum Magazine</p>
+    </div>
+  </div>
+
+  <div id="siteDetail" style="margin-top: 25px; text-align: center; font-size: 13px; display: none; border-top: 1px solid #ffda8b; padding-top: 15px;"></div>
+</section>
+
+<style>
+  .book-card {
+    border: 1px solid #3ab9eb;
+    border-radius: 14px;
+    padding: 20px;
+    width: 140px;
+    text-align: center;
+    color: #fff8e1;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .book-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 16px rgba(8, 179, 154, 0.3);
+    background-color: #0a4e697b;
+  }
+</style>
+
+<script>
+  const siteData = [
+    {
+      title: "Quantum Country – Learn Quantum Computing with Spaced Repetition",
+      link: "https://quantum.country/qcvc"
+    },
+    {
+      title: "Feynman Lectures on Physics – Quantum Mechanics (Vol. III)",
+      link: "https://www.feynmanlectures.caltech.edu/III_toc.html"
+    },
+    {
+      title: "Quanta Magazine – Quantum Physics Articles",
+      link: "https://www.quantamagazine.org/tag/quantum-physics/"
+    }
+  ];
+
+  function showSite(index) {
+    const site = siteData[index];
+    const container = document.getElementById("siteDetail");
+    container.innerHTML = `<strong>${site.title}</strong><br><a href="${site.link}" target="_blank" style="color:#ffd54f;">🌐 Visit Site</a>`;
+    container.style.display = "block";
+  }
+</script>
+
+  
+
+
+</body>
+</html>
