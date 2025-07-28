@@ -1,4 +1,5 @@
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -155,12 +156,293 @@
 </header>
 
 
+<section class="section" id="what-is-qc">
+  <h2><i class="fas fa-brain" style="color:#ff6f00;"></i> What is a Quantum Computer?</h2>
+  <p>Let’s compare how a classical bit vs a quantum bit (qubit) works, and why quantum computers are powerful.</p>
+
+  <div style="display:flex; flex-wrap:wrap; justify-content:space-around; align-items:center; gap:20px; margin-top:30px;">
+    <!-- Classical Bit -->
+    <div style="flex:1; min-width:280px; text-align:center;">
+      <h3 style="color:#84e3ff;">🖥 Classical Bit</h3>
+      <canvas id="classicBit" width="200" height="200" style="background:#111; border:1px solid #0ff; border-radius:12px;"></canvas>
+      <p style="margin-top:10px;">Always either <strong>0</strong> or <strong>1</strong>.</p>
+    </div>
+
+    <!-- Quantum Qubit -->
+    <div style="flex:1; min-width:280px; text-align:center;">
+      <h3 style="color:#84e3ff;">⚛ Qubit</h3>
+      <canvas id="quantumBit" width="200" height="200" style="background:#111; border:1px solid #0ff; border-radius:12px;"></canvas>
+      <p id="qubitDesc" style="margin-top:10px;">Can be both <strong>0 and 1</strong> at once!</p>
+      <button onclick="simulateQuantum()">Simulate Hadamard → Measure</button>
+    </div>
+  </div>
+</section>
+
+<script>
+  const classicCanvas = document.getElementById("classicBit");
+  const classicCtx = classicCanvas.getContext("2d");
+
+  function drawClassicBit(value = 0) {
+    classicCtx.clearRect(0, 0, 200, 200);
+    classicCtx.fillStyle = "#0ff";
+    classicCtx.font = "60px Courier";
+    classicCtx.textAlign = "center";
+    classicCtx.fillText(value, 100, 120);
+  }
+
+  drawClassicBit(0); // Initial draw
+
+  const quantumCanvas = document.getElementById("quantumBit");
+  const quantumCtx = quantumCanvas.getContext("2d");
+
+  function simulateQuantum() {
+    quantumCtx.clearRect(0, 0, 200, 200);
+    let phase = 0;
+    const desc = document.getElementById("qubitDesc");
+    desc.textContent = "Qubit is in superposition...";
+
+    function animateSuperposition() {
+      quantumCtx.clearRect(0, 0, 200, 200);
+      quantumCtx.beginPath();
+      quantumCtx.arc(100, 100, 50, 0, 2 * Math.PI);
+      quantumCtx.strokeStyle = "#0ff";
+      quantumCtx.stroke();
+
+      quantumCtx.beginPath();
+      quantumCtx.arc(100 + Math.cos(phase) * 25, 100 + Math.sin(phase) * 25, 8, 0, 2 * Math.PI);
+      quantumCtx.fillStyle = "#f0f";
+      quantumCtx.fill();
+
+      phase += 0.1;
+      if (phase < Math.PI * 4) {
+        requestAnimationFrame(animateSuperposition);
+      } else {
+        // Collapse
+        const result = Math.random() < 0.5 ? "0" : "1";
+        quantumCtx.clearRect(0, 0, 200, 200);
+        quantumCtx.fillStyle = "#0ff";
+        quantumCtx.font = "60px Courier";
+        quantumCtx.textAlign = "center";
+        quantumCtx.fillText(result, 100, 120);
+        desc.textContent = `Measured → Qubit collapsed to ${result}`;
+      }
+    }
+
+    animateSuperposition();
+  }
+</script>
+
+<!-- ملف رئيسي لتعزيز فهم الكوانتم كمبيوتر -->
+<!-- سيتم بناء السكاشن التالية بداخله: -->
+
+<!-- ✅ 1. Why Quantum Computers -->
+<section class="section" id="why-quantum">
+  <h2><i class="fas fa-balance-scale" style="color:#ff6f00;"></i> Why Quantum Computers?</h2>
+  <p>Some problems are too complex for classical computers. Here's why quantum computers matter:</p>
+  <div style="overflow-x:auto; margin-top:20px;">
+    <table style="width:100%; border-collapse: collapse; font-size: 13px;">
+      <thead style="background:#012f3a; color:#0ff;">
+        <tr>
+          <th style="padding:10px; border:1px solid #0ff;">Problem</th>
+          <th style="padding:10px; border:1px solid #0ff;">Classical Computer</th>
+          <th style="padding:10px; border:1px solid #0ff;">Quantum Computer</th>
+        </tr>
+      </thead>
+      <tbody style="color:#dfefff;">
+        <tr>
+          <td style="padding:8px; border:1px solid #0ff;">Factor large numbers</td>
+          <td style="padding:8px; border:1px solid #0ff;">Takes years</td>
+          <td style="padding:8px; border:1px solid #0ff;">Minutes (Shor's Algorithm)</td>
+        </tr>
+        <tr>
+          <td style="padding:8px; border:1px solid #0ff;">Search unstructured data</td>
+          <td style="padding:8px; border:1px solid #0ff;">Linear scan</td>
+          <td style="padding:8px; border:1px solid #0ff;">√n steps (Grover’s Algorithm)</td>
+        </tr>
+        <tr>
+          <td style="padding:8px; border:1px solid #0ff;">Simulate molecules</td>
+          <td style="padding:8px; border:1px solid #0ff;">Impossible</td>
+          <td style="padding:8px; border:1px solid #0ff;">Efficient</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ✅ 2. Bloch Sphere Visualization -->
+<section class="section" id="bloch-sphere">
+  <h2><i class="fas fa-globe-asia" style="color:#ff6f00;"></i> Bloch Sphere (Qubit Visualization)</h2>
+  <p>A qubit's state can be visualized as a point on a sphere. Use the slider to rotate the state.</p>
+  <div style="text-align:center;">
+    <canvas id="blochCanvas" width="300" height="300" style="background:#000; border:1px solid #0ff; border-radius: 10px;"></canvas><br>
+    <input type="range" id="thetaSlider" min="0" max="360" value="0" style="width: 60%; margin-top: 15px;">
+  </div>
+</section>
+
+<!-- ✅ 3. Quantum Gate Playground -->
+<section class="section" id="gate-playground">
+  <h2><i class="fas fa-sliders-h" style="color:#ff6f00;"></i> Quantum Gate Playground</h2>
+  <p>Click on gates to apply them to the qubit. See how its state changes.</p>
+  <div style="text-align:center;">
+    <div id="qubitGateState" style="font-size:24px; margin-bottom: 10px;">|0⟩</div>
+    <button onclick="applyGate('X')">X Gate</button>
+    <button onclick="applyGate('Z')">Z Gate</button>
+    <button onclick="applyGate('H')">Hadamard</button>
+    <button onclick="resetQubit()">Reset</button>
+    <div id="gateResult" style="margin-top:15px; font-weight:bold;"></div>
+  </div>
+</section>
+
+<!-- ✅ 4. Famous Quantum Algorithms -->
+<section class="section" id="quantum-algorithms">
+  <h2><i class="fas fa-diagram-project" style="color:#ff6f00;"></i> Famous Quantum Algorithms</h2>
+  <p>Learn the purpose of well-known quantum algorithms:</p>
+  <ul style="margin-top: 15px; font-size: 13px;">
+    <li><strong>Shor’s Algorithm</strong> – Breaks large number factoring → breaks RSA encryption.</li>
+    <li><strong>Grover’s Algorithm</strong> – Speeds up search in unstructured data.</li>
+    <li><strong>Deutsch-Jozsa</strong> – Shows exponential speed-up with just one evaluation.</li>
+  </ul>
+</section>
+
+<!-- ✅ 5. Learning Journey (Steps) -->
+<section class="section" id="quantum-learning">
+  <h2><i class="fas fa-shoe-prints" style="color:#ff6f00;"></i> Quantum Learning Path</h2>
+  <p>Follow these interactive steps to master quantum thinking:</p>
+  <ol style="margin-top:15px; font-size: 13px;">
+    <li>🌀 Understand classical vs quantum bits</li>
+    <li>🎛 Play with quantum gates</li>
+    <li>🌐 Visualize the Bloch Sphere</li>
+    <li>🔁 Explore entanglement and measurement</li>
+    <li>🧠 Try building a basic quantum circuit</li>
+  </ol>
+</section>
+
+<!-- ✅ 6. Code Lab -->
+<section class="section" id="quantum-code-lab">
+  <h2><i class="fas fa-code" style="color:#ff6f00;"></i> Code Your First Qubit</h2>
+  <p>Try writing a simple simulation of a qubit in JavaScript. Run it and see what happens!</p>
+  <textarea id="codeEditor" style="width:100%; height:150px; background:#111; color:#0ff; border:1px solid #0ff; font-family: monospace; padding:10px; border-radius: 10px;">let qubit = '|0⟩';
+
+function applyHadamard(q) {
+  return '|0⟩ + |1⟩';
+}
+
+function measure(q) {
+  return Math.random() < 0.5 ? '|0⟩' : '|1⟩';
+}
+
+qubit = applyHadamard(qubit);
+console.log(measure(qubit));</textarea>
+  <button onclick="runUserCode()" style="margin-top: 10px;">Run Code</button>
+  <pre id="codeOutput" style="margin-top:10px; background:#000; color:#0f0; padding:10px; border:1px solid #0ff; border-radius:10px;"></pre>
+</section>
+
+<script>
+function runUserCode() {
+  const code = document.getElementById("codeEditor").value;
+  const output = document.getElementById("codeOutput");
+  try {
+    const result = eval(code);
+    output.textContent = result ?? '✓ Code executed successfully';
+  } catch (e) {
+    output.textContent = '⚠ Error: ' + e.message;
+  }
+}
+</script>
+
+<script>
+// 🎯 Bloch Sphere Visualization
+const blochCanvas = document.getElementById("blochCanvas");
+const blochCtx = blochCanvas.getContext("2d");
+const thetaSlider = document.getElementById("thetaSlider");
+
+function drawBlochSphere(thetaDeg = 0) {
+  blochCtx.clearRect(0, 0, 300, 300);
+
+  // Sphere outline
+  blochCtx.beginPath();
+  blochCtx.arc(150, 150, 100, 0, 2 * Math.PI);
+  blochCtx.strokeStyle = "#0ff";
+  blochCtx.lineWidth = 1.5;
+  blochCtx.stroke();
+
+  // Arrow (state vector)
+  const thetaRad = thetaDeg * Math.PI / 180;
+  const x = 150 + 100 * Math.sin(thetaRad);
+  const y = 150 - 100 * Math.cos(thetaRad);
+
+  blochCtx.beginPath();
+  blochCtx.moveTo(150, 150);
+  blochCtx.lineTo(x, y);
+  blochCtx.strokeStyle = "#f0f";
+  blochCtx.lineWidth = 2.5;
+  blochCtx.stroke();
+}
+
+thetaSlider.addEventListener("input", () => {
+  drawBlochSphere(parseInt(thetaSlider.value));
+});
+
+drawBlochSphere();
+
+// 🎯 Quantum Gate Playground Logic
+let gateQubit = '|0⟩';
+
+function applyGate(gate) {
+  const stateDisplay = document.getElementById("qubitGateState");
+  const resultDisplay = document.getElementById("gateResult");
+
+  if (gate === 'X') {
+    gateQubit = gateQubit === '|0⟩' ? '|1⟩' : '|0⟩';
+    resultDisplay.textContent = 'Applied X Gate (flip qubit).';
+  } else if (gate === 'Z') {
+    resultDisplay.textContent = 'Applied Z Gate (phase flip, visually unchanged).';
+  } else if (gate === 'H') {
+    gateQubit = '|0⟩ + |1⟩';
+    resultDisplay.textContent = 'Applied Hadamard Gate (now in superposition).';
+  }
+
+  stateDisplay.textContent = gateQubit;
+}
+
+function resetQubit() {
+  gateQubit = '|0⟩';
+  document.getElementById("qubitGateState").textContent = gateQubit;
+  document.getElementById("gateResult").textContent = 'Qubit reset to |0⟩';
+}
+
+// ✅ Auto-start code editor sample logic
+function runUserCode() {
+  const code = document.getElementById("codeEditor").value;
+  const output = document.getElementById("codeOutput");
+  try {
+    const result = eval(code);
+    output.textContent = result ?? '✓ Code executed successfully';
+  } catch (e) {
+    output.textContent = '⚠ Error: ' + e.message;
+  }
+}
+</script>
+
+
+<section class="section">
+  <h2><i class="fas fa-microchip" style="color:#ff6f00;"></i> How Quantum Computers Use These Phenomena</h2>
+  <p>This section links each quantum concept you've explored to how it's used in real quantum computers:</p>
+  <ul style="line-height:1.8em; font-size: 1.1em;">
+    <li><strong>🌀 Superposition:</strong> A qubit can be in both |0⟩ and |1⟩ states simultaneously — this is what powers parallel computation in quantum systems.</li>
+    <li><strong>🟢 Tunneling:</strong> Quantum annealers (like D-Wave) use tunneling to escape local minima in optimization problems.</li>
+    <li><strong>👁 Collapse by Observation:</strong> Measurement of a qubit causes its superposition to collapse to either 0 or 1. This is crucial for extracting results.</li>
+    <li><strong>🌪 Quantum Evolution:</strong> The state of a quantum system evolves with each gate. Like the vortex, it spirals into complex states until observed.</li>
+    <li><strong>🪐 Quantum Gates:</strong> Just as your planet pulses, quantum gates like Hadamard cause a qubit to enter or leave superposition.</li>
+  </ul>
+  <p style="margin-top:10px; font-style: italic;">Each animation you've built isn't just cool — it’s a gateway to understanding how real quantum machines think.</p>
+</section>
 
 
 
   
 
- <section class="section">
+<section class="section">
 <h2><i class="fas fa-explosion" style="color:#ff6f00;"></i> Quantum Nova</h2>
   <p>A collapsing quantum star unleashes multiversal explosions across space, time, and probability itself.</p>
   <div class="simulat">
@@ -230,8 +512,6 @@
     drawBurst();
   }
 </script>
-
-
 
   
 
