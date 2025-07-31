@@ -85,7 +85,7 @@
     }
 
     .section h2 {
-      font-size: 18px;
+      font-size: 16px;
       margin-bottom: 10px;
       color: #84e3ff;
     }
@@ -145,7 +145,54 @@
       font-size: 12px;
       margin-top: 10px;
     }
+  @keyframes blast {
+  0% {
+    transform: scale(0.5);
+    opacity: 1;
+    box-shadow: 0 0 10px #0ff;
+  }
+  100% {
+    transform: scale(50);
+    opacity: 0;
+    box-shadow: 0 0 200px #0051ff;
+  }
+}
+
+@keyframes explode {
+  0% { opacity: 1; transform: scale(1); }
+  80% { opacity: 1; transform: scale(1.2); }
+  100% { opacity: 0; transform: scale(0.9); display: none; }
+}
+
+
+
   </style>
+
+  
+  <div id="splash-screen" style="
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background-color: #000; z-index: 9999; display: flex;
+  justify-content: center; align-items: center;
+  overflow: hidden;
+">
+  <div id="explosion-container" style="
+    text-align: center;
+    font-family: 'Orbitron', sans-serif;
+    color: #ff6f00;
+    font-size: 36px;
+    animation: explode 2s ease-out forwards;
+  ">
+    <div id="blast-circle" style="
+      width: 100px; height: 100px;
+      background: radial-gradient(circle, rgb(14, 117, 117), rgb(44, 5, 93), transparent);
+      border-radius: 50%;
+      animation: blast 1s ease-in-out forwards;
+      margin: 0 auto 20px;
+    "></div>
+    <div id="welcome-text">Hello World</div>
+  </div>
+</div>
+
 <header style="display: flex; justify-content: space-between; align-items: center; padding: 10px;">
   <h1 style="margin: 0;  ">
     Quantum
@@ -154,88 +201,311 @@
     <i class="fab fa-x-twitter"></i>
   </a>
 </header>
+<section class="section" id="quantumDualBox" style="display:flex; flex-direction:column; align-items:center;">
+  <h2>  <i class="fas fa-microchip" style="color:#ff6f00;"></i> Quantum Computer Construction
+</h2>
 
-
-<section class="section" id="what-is-qc">
-  <h2><i class="fas fa-brain" style="color:#ff6f00;"></i> What is a Quantum Computer?</h2>
-  <p>Let’s compare how a classical bit vs a quantum bit (qubit) works, and why quantum computers are powerful.</p>
-
-  <div style="display:flex; flex-wrap:wrap; justify-content:space-around; align-items:center; gap:20px; margin-top:30px;">
-    <!-- Classical Bit -->
-    <div style="flex:1; min-width:280px; text-align:center;">
-      <h3 style="color:#84e3ff;">🖥 Classical Bit</h3>
-      <canvas id="classicBit" width="200" height="200" style="background:#111; border:1px solid #0ff; border-radius:12px;"></canvas>
-      <p style="margin-top:10px;">Always either <strong>0</strong> or <strong>1</strong>.</p>
+  <div style="display:flex; flex-direction:row; gap:20px; justify-content:center; flex-wrap:nowrap;">
+    <!-- مربع الجهاز -->
+    <div style="flex:1 1 300px; text-align:center; max-width:320px;">
+      <canvas id="quantumDeviceCanvas" width="300" height="190" style="background:#000; border:1px solid #0ff; border-radius:10px;"></canvas>
+      <div id="quantumStyledText" style="margin-top:10px; font-size:11px; color:#d3f2ff; min-height:40px;"></div>
     </div>
-
-    <!-- Quantum Qubit -->
-    <div style="flex:1; min-width:280px; text-align:center;">
-      <h3 style="color:#84e3ff;">⚛ Qubit</h3>
-      <canvas id="quantumBit" width="200" height="200" style="background:#111; border:1px solid #0ff; border-radius:12px;"></canvas>
-      <p id="qubitDesc" style="margin-top:10px;">Can be both <strong>0 and 1</strong> at once!</p>
-      <button onclick="simulateQuantum()">Simulate Hadamard → Measure</button>
+    
+    <!-- مربع المشهد -->
+    <div style="flex:1 1 300px; text-align:center; max-width:320px;">
+      <canvas id="quantumSceneCanvas" width="300" height="190" style="background:#000; border:2px solid #0ff; border-radius:10px;"></canvas>
+      <p id="quantumSceneLabel" style="color:#ccc; font-size:12px; margin-top:6px; min-height:18px;"></p>
     </div>
   </div>
+
+  <button onclick="advanceQuantumStage()" style="margin-top:18px;">Next Stage</button>
+  <p id="styledProgress" style="font-size:10px; color:#84e3ff; margin-top:6px;"></p>
 </section>
 
 <script>
-  const classicCanvas = document.getElementById("classicBit");
-  const classicCtx = classicCanvas.getContext("2d");
+const canvasDevice = document.getElementById("quantumDeviceCanvas");
+const ctxDevice = canvasDevice.getContext("2d");
 
-  function drawClassicBit(value = 0) {
-    classicCtx.clearRect(0, 0, 200, 200);
-    classicCtx.fillStyle = "#0ff";
-    classicCtx.font = "60px Courier";
-    classicCtx.textAlign = "center";
-    classicCtx.fillText(value, 100, 120);
+let currentStage = 0;
+const quantumSteps = [
+  "Initializing frame...",
+  "Installing Qubit...",
+  "Activating Superpos...",
+  "Linking Entangle...",
+  "Placing Gates...",
+  "Enabling Sensor...",
+  "Booting Interface..."
+];
+
+function renderDeviceFrame() {
+  ctxDevice.clearRect(0, 0, 300, 190);
+  ctxDevice.fillStyle = "#111";
+  ctxDevice.fillRect(35, 30, 230, 130);
+  ctxDevice.strokeStyle = "#00ffff";
+  ctxDevice.lineWidth = 1.5;
+  ctxDevice.shadowBlur = 15;
+  ctxDevice.shadowColor = "#0ff";
+  ctxDevice.strokeRect(35, 30, 230, 130);
+  ctxDevice.shadowBlur = 0;
+  ctxDevice.fillStyle = "#0ff";
+  ctxDevice.font = "bold 9px Orbitron";
+  ctxDevice.fillText("QUANTUM SYSTEM", 95, 20);
+}
+
+function renderQuantumStage(stageIndex) {
+  renderDeviceFrame();
+  if (stageIndex >= 1) {
+    ctxDevice.beginPath();
+    ctxDevice.arc(150, 95, 15, 0, 2 * Math.PI);
+    ctxDevice.fillStyle = "#f0f";
+    ctxDevice.shadowBlur = 10;
+    ctxDevice.shadowColor = "#f0f";
+    ctxDevice.fill();
+    ctxDevice.shadowBlur = 0;
   }
+  if (stageIndex >= 2) {
+    ctxDevice.beginPath();
+    ctxDevice.arc(150, 95, 27, 0, 2 * Math.PI);
+    ctxDevice.strokeStyle = "#0ff";
+    ctxDevice.setLineDash([5, 3]);
+    ctxDevice.lineWidth = 1;
+    ctxDevice.stroke();
+    ctxDevice.setLineDash([]);
+  }
+  if (stageIndex >= 3) {
+    ctxDevice.beginPath();
+    ctxDevice.moveTo(105, 70);
+    ctxDevice.lineTo(195, 70);
+    ctxDevice.strokeStyle = "#ff0";
+    ctxDevice.lineWidth = 1.5;
+    ctxDevice.stroke();
+    ctxDevice.beginPath();
+    ctxDevice.arc(105, 70, 4, 0, 2 * Math.PI);
+    ctxDevice.arc(195, 70, 4, 0, 2 * Math.PI);
+    ctxDevice.fillStyle = "#ff0";
+    ctxDevice.fill();
+  }
+  if (stageIndex >= 4) {
+    ctxDevice.fillStyle = "#222";
+    ctxDevice.fillRect(95, 130, 22, 14);
+    ctxDevice.fillRect(180, 130, 22, 14);
+    ctxDevice.fillStyle = "#0ff";
+    ctxDevice.font = "bold 9px Arial";
+    ctxDevice.fillText("H", 100, 141);
+    ctxDevice.fillText("X", 185, 141);
+  }
+  if (stageIndex >= 5) {
+    ctxDevice.beginPath();
+    ctxDevice.ellipse(150, 55, 18, 7, 0, 0, 2 * Math.PI);
+    ctxDevice.strokeStyle = "#ff0077";
+    ctxDevice.stroke();
+    ctxDevice.beginPath();
+    ctxDevice.arc(150, 55, 3, 0, 2 * Math.PI);
+    ctxDevice.fillStyle = "#ff0077";
+    ctxDevice.fill();
+  }
+  if (stageIndex >= 6) {
+    ctxDevice.fillStyle = "#222";
+    ctxDevice.fillRect(110, 150, 80, 22);
+    ctxDevice.fillStyle = "#0f0";
+    ctxDevice.font = "9px Courier";
+    const probZero = 0.7;
+    const outcome = Math.random() < probZero ? "|0⟩" : "|1⟩";
+    ctxDevice.fillText("Out: " + outcome, 120, 165);
+    ctxDevice.shadowColor = "#0f0";
+    ctxDevice.shadowBlur = 8;
+    ctxDevice.strokeRect(110, 150, 80, 22);
+    ctxDevice.shadowBlur = 0;
 
-  drawClassicBit(0); // Initial draw
+    const infoText = document.getElementById("quantumStyledText");
+    infoText.innerHTML += `<br><small style="color:#ccc;">|0⟩: 70% |1⟩: 30%</small>`;
+  }
+}
 
-  const quantumCanvas = document.getElementById("quantumBit");
-  const quantumCtx = quantumCanvas.getContext("2d");
+const canvasScene = document.getElementById("quantumSceneCanvas");
+const ctxScene = canvasScene.getContext("2d");
 
-  function simulateQuantum() {
-    quantumCtx.clearRect(0, 0, 200, 200);
-    let phase = 0;
-    const desc = document.getElementById("qubitDesc");
-    desc.textContent = "Qubit is in superposition...";
+function renderSceneFrame() {
+  ctxScene.clearRect(0, 0, 300, 190);
+  ctxScene.strokeStyle = "#0ff";
+  ctxScene.lineWidth = 1.5;
+  ctxScene.strokeRect(15, 15, 270, 160);
+}
 
-    function animateSuperposition() {
-      quantumCtx.clearRect(0, 0, 200, 200);
-      quantumCtx.beginPath();
-      quantumCtx.arc(100, 100, 50, 0, 2 * Math.PI);
-      quantumCtx.strokeStyle = "#0ff";
-      quantumCtx.stroke();
+function showClassicalVsQuantum() {
+  renderSceneFrame();
+  ctxScene.fillStyle = "#444";
+  ctxScene.fillRect(30, 50, 90, 90);
+  ctxScene.fillStyle = "#0f0";
+  ctxScene.font = "bold 9px Courier";
+  ctxScene.fillText("BIT: 1", 55, 100);
+  ctxScene.fillStyle = "#ccc";
+  ctxScene.fillText("Classic CPU", 42, 120);
 
-      quantumCtx.beginPath();
-      quantumCtx.arc(100 + Math.cos(phase) * 25, 100 + Math.sin(phase) * 25, 8, 0, 2 * Math.PI);
-      quantumCtx.fillStyle = "#f0f";
-      quantumCtx.fill();
+  ctxScene.fillStyle = "#222";
+  ctxScene.fillRect(170, 50, 90, 90);
+  ctxScene.fillStyle = "#f0f";
+  ctxScene.fillText("QUBIT", 190, 85);
+  ctxScene.fillText("|ψ⟩ = α|0⟩+β|1⟩", 172, 100);
+  ctxScene.fillStyle = "#ccc";
+  ctxScene.fillText("Quantum CPU", 177, 120);
+}
 
-      phase += 0.1;
-      if (phase < Math.PI * 4) {
-        requestAnimationFrame(animateSuperposition);
-      } else {
-        // Collapse
-        const result = Math.random() < 0.5 ? "0" : "1";
-        quantumCtx.clearRect(0, 0, 200, 200);
-        quantumCtx.fillStyle = "#0ff";
-        quantumCtx.font = "60px Courier";
-        quantumCtx.textAlign = "center";
-        quantumCtx.fillText(result, 100, 120);
-        desc.textContent = `Measured → Qubit collapsed to ${result}`;
-      }
+function showQuantumGates() {
+  renderSceneFrame();
+  ctxScene.strokeStyle = "#0ff";
+  ctxScene.beginPath();
+  ctxScene.moveTo(50, 60);
+  ctxScene.lineTo(250, 60);
+  ctxScene.stroke();
+  ctxScene.fillStyle = "#333";
+  ctxScene.fillRect(90, 45, 20, 30);
+  ctxScene.fillRect(190, 45, 20, 30);
+  ctxScene.fillStyle = "#0ff";
+  ctxScene.font = "bold 12px Arial";
+  ctxScene.fillText("H", 96, 65);
+  ctxScene.fillText("X", 196, 65);
+  ctxScene.fillStyle = "#ccc";
+  ctxScene.font = "9px Courier";
+  ctxScene.fillText("Quantum Gates", 100, 140);
+}
+
+function showMeasurementPhase() {
+  renderSceneFrame();
+  ctxScene.beginPath();
+  ctxScene.ellipse(150, 85, 22, 10, 0, 0, 2 * Math.PI);
+  ctxScene.strokeStyle = "#ff0077";
+  ctxScene.stroke();
+  ctxScene.beginPath();
+  ctxScene.arc(150, 85, 4, 0, 2 * Math.PI);
+  ctxScene.fillStyle = "#ff0077";
+  ctxScene.fill();
+  ctxScene.fillStyle = "#ccc";
+  ctxScene.font = "9px Courier";
+  ctxScene.fillText("Before: |ψ⟩ = α|0⟩+β|1⟩", 80, 120);
+  ctxScene.fillText("Measured: |0⟩", 100, 135);
+}
+
+function showSuperposition() {
+  renderSceneFrame();
+  ctxScene.fillStyle = "#f0f";
+  ctxScene.beginPath();
+  ctxScene.arc(150, 95, 22, 0, 2 * Math.PI);
+  ctxScene.fill();
+  ctxScene.fillStyle = "#fff";
+  ctxScene.font = "bold 11px Courier";
+  ctxScene.fillText("Superposition", 95, 145);
+}
+
+function showEntanglement() {
+  renderSceneFrame();
+  ctxScene.fillStyle = "#ff0";
+  ctxScene.beginPath();
+  ctxScene.arc(110, 95, 11, 0, 2 * Math.PI);
+  ctxScene.fill();
+  ctxScene.beginPath();
+  ctxScene.arc(190, 95, 11, 0, 2 * Math.PI);
+  ctxScene.fill();
+  ctxScene.strokeStyle = "#ff0";
+  ctxScene.beginPath();
+  ctxScene.moveTo(121, 95);
+  ctxScene.lineTo(179, 95);
+  ctxScene.stroke();
+  ctxScene.fillStyle = "#ccc";
+  ctxScene.font = "bold 11px Courier";
+  ctxScene.fillText("Entanglement", 100, 145);
+}
+
+function showTunneling() {
+  renderSceneFrame();
+  ctxScene.fillStyle = "#0ff";
+  ctxScene.fillRect(70, 80, 30, 30);
+  ctxScene.fillStyle = "#f00";
+  ctxScene.fillRect(200, 80, 30, 30);
+  ctxScene.beginPath();
+  ctxScene.moveTo(100, 95);
+  ctxScene.lineTo(200, 95);
+  ctxScene.setLineDash([5, 3]);
+  ctxScene.strokeStyle = "#0ff";
+  ctxScene.stroke();
+  ctxScene.setLineDash([]);
+  ctxScene.fillStyle = "#ccc";
+  ctxScene.font = "bold 11px Courier";
+  ctxScene.fillText("Quantum Tunneling", 90, 145);
+}
+
+function advanceQuantumStage() {
+  const infoText = document.getElementById("quantumStyledText");
+  const sceneLabel = document.getElementById("quantumSceneLabel");
+  const progressTracker = document.getElementById("styledProgress");
+
+  if (currentStage < quantumSteps.length) {
+    infoText.innerHTML = quantumSteps[currentStage];
+    renderQuantumStage(currentStage);
+
+    switch (currentStage) {
+      case 0: showClassicalVsQuantum(); break;
+      case 1: showSuperposition(); break;
+      case 2: showEntanglement(); break;
+      case 3: showTunneling(); break;
+      case 4: showQuantumGates(); break;
+      case 5: showMeasurementPhase(); break;
     }
 
-    animateSuperposition();
+    progressTracker.innerText = `Stage ${currentStage + 1} of ${quantumSteps.length}`;
+    currentStage++;
+  } else {
+    infoText.innerHTML = " Quantum Device Ready!";
+    renderSceneFrame();
+    sceneLabel.innerText = "Complete.";
+
+    const finalBox = document.createElement("div");
+    finalBox.style.marginTop = "10px";
+    finalBox.style.display = "flex";
+    finalBox.style.flexDirection = "column";
+    finalBox.style.alignItems = "center";
+
+    const embedVideo = document.createElement("iframe");
+    embedVideo.width = "260";
+    embedVideo.height = "160";
+    embedVideo.src = "https://www.youtube.com/embed/zmL3JGG7ywU?si=W7UCxn52OrJYpFRp";
+    embedVideo.title = "Quantum Computer Demo";
+    embedVideo.frameBorder = "0";
+    embedVideo.allow =
+      "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+    embedVideo.allowFullscreen = true;
+    embedVideo.style.border = "2px solid #0ff";
+    embedVideo.style.borderRadius = "10px";
+
+    const restartButton = document.createElement("button");
+    restartButton.textContent = "Restart";
+    restartButton.style.marginTop = "10px";
+    restartButton.style.fontSize = "11px";
+    restartButton.onclick = resetQuantumSimulation;
+
+    progressTracker.innerHTML = "";
+    progressTracker.appendChild(finalBox);
+    finalBox.appendChild(embedVideo);
+    finalBox.appendChild(restartButton);
   }
+}
+
+function resetQuantumSimulation() {
+  currentStage = 0;
+  renderQuantumStage(currentStage);
+  renderSceneFrame();
+  document.getElementById("quantumStyledText").innerHTML = "Initializing frame...";
+  document.getElementById("quantumSceneLabel").innerText = "Scene 1: Classical vs Quantum";
+  document.getElementById("styledProgress").innerText = `Stage 1 of ${quantumSteps.length}`;
+  currentStage++;
+}
+
+renderQuantumStage(0);
+renderSceneFrame();
 </script>
 
-<!-- ملف رئيسي لتعزيز فهم الكوانتم كمبيوتر -->
-<!-- سيتم بناء السكاشن التالية بداخله: -->
 
-<!-- ✅ 1. Why Quantum Computers -->
 <section class="section" id="why-quantum">
   <h2><i class="fas fa-balance-scale" style="color:#ff6f00;"></i> Why Quantum Computers?</h2>
   <p>Some problems are too complex for classical computers. Here's why quantum computers matter:</p>
@@ -267,175 +537,6 @@
       </tbody>
     </table>
   </div>
-</section>
-
-<!-- ✅ 2. Bloch Sphere Visualization -->
-<section class="section" id="bloch-sphere">
-  <h2><i class="fas fa-globe-asia" style="color:#ff6f00;"></i> Bloch Sphere (Qubit Visualization)</h2>
-  <p>A qubit's state can be visualized as a point on a sphere. Use the slider to rotate the state.</p>
-  <div style="text-align:center;">
-    <canvas id="blochCanvas" width="300" height="300" style="background:#000; border:1px solid #0ff; border-radius: 10px;"></canvas><br>
-    <input type="range" id="thetaSlider" min="0" max="360" value="0" style="width: 60%; margin-top: 15px;">
-  </div>
-</section>
-
-<!-- ✅ 3. Quantum Gate Playground -->
-<section class="section" id="gate-playground">
-  <h2><i class="fas fa-sliders-h" style="color:#ff6f00;"></i> Quantum Gate Playground</h2>
-  <p>Click on gates to apply them to the qubit. See how its state changes.</p>
-  <div style="text-align:center;">
-    <div id="qubitGateState" style="font-size:24px; margin-bottom: 10px;">|0⟩</div>
-    <button onclick="applyGate('X')">X Gate</button>
-    <button onclick="applyGate('Z')">Z Gate</button>
-    <button onclick="applyGate('H')">Hadamard</button>
-    <button onclick="resetQubit()">Reset</button>
-    <div id="gateResult" style="margin-top:15px; font-weight:bold;"></div>
-  </div>
-</section>
-
-<!-- ✅ 4. Famous Quantum Algorithms -->
-<section class="section" id="quantum-algorithms">
-  <h2><i class="fas fa-diagram-project" style="color:#ff6f00;"></i> Famous Quantum Algorithms</h2>
-  <p>Learn the purpose of well-known quantum algorithms:</p>
-  <ul style="margin-top: 15px; font-size: 13px;">
-    <li><strong>Shor’s Algorithm</strong> – Breaks large number factoring → breaks RSA encryption.</li>
-    <li><strong>Grover’s Algorithm</strong> – Speeds up search in unstructured data.</li>
-    <li><strong>Deutsch-Jozsa</strong> – Shows exponential speed-up with just one evaluation.</li>
-  </ul>
-</section>
-
-<!-- ✅ 5. Learning Journey (Steps) -->
-<section class="section" id="quantum-learning">
-  <h2><i class="fas fa-shoe-prints" style="color:#ff6f00;"></i> Quantum Learning Path</h2>
-  <p>Follow these interactive steps to master quantum thinking:</p>
-  <ol style="margin-top:15px; font-size: 13px;">
-    <li>🌀 Understand classical vs quantum bits</li>
-    <li>🎛 Play with quantum gates</li>
-    <li>🌐 Visualize the Bloch Sphere</li>
-    <li>🔁 Explore entanglement and measurement</li>
-    <li>🧠 Try building a basic quantum circuit</li>
-  </ol>
-</section>
-
-<!-- ✅ 6. Code Lab -->
-<section class="section" id="quantum-code-lab">
-  <h2><i class="fas fa-code" style="color:#ff6f00;"></i> Code Your First Qubit</h2>
-  <p>Try writing a simple simulation of a qubit in JavaScript. Run it and see what happens!</p>
-  <textarea id="codeEditor" style="width:100%; height:150px; background:#111; color:#0ff; border:1px solid #0ff; font-family: monospace; padding:10px; border-radius: 10px;">let qubit = '|0⟩';
-
-function applyHadamard(q) {
-  return '|0⟩ + |1⟩';
-}
-
-function measure(q) {
-  return Math.random() < 0.5 ? '|0⟩' : '|1⟩';
-}
-
-qubit = applyHadamard(qubit);
-console.log(measure(qubit));</textarea>
-  <button onclick="runUserCode()" style="margin-top: 10px;">Run Code</button>
-  <pre id="codeOutput" style="margin-top:10px; background:#000; color:#0f0; padding:10px; border:1px solid #0ff; border-radius:10px;"></pre>
-</section>
-
-<script>
-function runUserCode() {
-  const code = document.getElementById("codeEditor").value;
-  const output = document.getElementById("codeOutput");
-  try {
-    const result = eval(code);
-    output.textContent = result ?? '✓ Code executed successfully';
-  } catch (e) {
-    output.textContent = '⚠ Error: ' + e.message;
-  }
-}
-</script>
-
-<script>
-// 🎯 Bloch Sphere Visualization
-const blochCanvas = document.getElementById("blochCanvas");
-const blochCtx = blochCanvas.getContext("2d");
-const thetaSlider = document.getElementById("thetaSlider");
-
-function drawBlochSphere(thetaDeg = 0) {
-  blochCtx.clearRect(0, 0, 300, 300);
-
-  // Sphere outline
-  blochCtx.beginPath();
-  blochCtx.arc(150, 150, 100, 0, 2 * Math.PI);
-  blochCtx.strokeStyle = "#0ff";
-  blochCtx.lineWidth = 1.5;
-  blochCtx.stroke();
-
-  // Arrow (state vector)
-  const thetaRad = thetaDeg * Math.PI / 180;
-  const x = 150 + 100 * Math.sin(thetaRad);
-  const y = 150 - 100 * Math.cos(thetaRad);
-
-  blochCtx.beginPath();
-  blochCtx.moveTo(150, 150);
-  blochCtx.lineTo(x, y);
-  blochCtx.strokeStyle = "#f0f";
-  blochCtx.lineWidth = 2.5;
-  blochCtx.stroke();
-}
-
-thetaSlider.addEventListener("input", () => {
-  drawBlochSphere(parseInt(thetaSlider.value));
-});
-
-drawBlochSphere();
-
-// 🎯 Quantum Gate Playground Logic
-let gateQubit = '|0⟩';
-
-function applyGate(gate) {
-  const stateDisplay = document.getElementById("qubitGateState");
-  const resultDisplay = document.getElementById("gateResult");
-
-  if (gate === 'X') {
-    gateQubit = gateQubit === '|0⟩' ? '|1⟩' : '|0⟩';
-    resultDisplay.textContent = 'Applied X Gate (flip qubit).';
-  } else if (gate === 'Z') {
-    resultDisplay.textContent = 'Applied Z Gate (phase flip, visually unchanged).';
-  } else if (gate === 'H') {
-    gateQubit = '|0⟩ + |1⟩';
-    resultDisplay.textContent = 'Applied Hadamard Gate (now in superposition).';
-  }
-
-  stateDisplay.textContent = gateQubit;
-}
-
-function resetQubit() {
-  gateQubit = '|0⟩';
-  document.getElementById("qubitGateState").textContent = gateQubit;
-  document.getElementById("gateResult").textContent = 'Qubit reset to |0⟩';
-}
-
-// ✅ Auto-start code editor sample logic
-function runUserCode() {
-  const code = document.getElementById("codeEditor").value;
-  const output = document.getElementById("codeOutput");
-  try {
-    const result = eval(code);
-    output.textContent = result ?? '✓ Code executed successfully';
-  } catch (e) {
-    output.textContent = '⚠ Error: ' + e.message;
-  }
-}
-</script>
-
-
-<section class="section">
-  <h2><i class="fas fa-microchip" style="color:#ff6f00;"></i> How Quantum Computers Use These Phenomena</h2>
-  <p>This section links each quantum concept you've explored to how it's used in real quantum computers:</p>
-  <ul style="line-height:1.8em; font-size: 1.1em;">
-    <li><strong>🌀 Superposition:</strong> A qubit can be in both |0⟩ and |1⟩ states simultaneously — this is what powers parallel computation in quantum systems.</li>
-    <li><strong>🟢 Tunneling:</strong> Quantum annealers (like D-Wave) use tunneling to escape local minima in optimization problems.</li>
-    <li><strong>👁 Collapse by Observation:</strong> Measurement of a qubit causes its superposition to collapse to either 0 or 1. This is crucial for extracting results.</li>
-    <li><strong>🌪 Quantum Evolution:</strong> The state of a quantum system evolves with each gate. Like the vortex, it spirals into complex states until observed.</li>
-    <li><strong>🪐 Quantum Gates:</strong> Just as your planet pulses, quantum gates like Hadamard cause a qubit to enter or leave superposition.</li>
-  </ul>
-  <p style="margin-top:10px; font-style: italic;">Each animation you've built isn't just cool — it’s a gateway to understanding how real quantum machines think.</p>
 </section>
 
 
@@ -812,11 +913,6 @@ function runUserCode() {
 
 
 
-
-
-
-
-
   
 
 <section class="section">
@@ -1093,78 +1189,81 @@ function runUserCode() {
 
 
 
-
 <section class="section">
 <h2><i id="conceptIcon" class="fas fa-brain fa-beat" style="color:#ff6f00;"></i> Quantum Concepts Explorer</h2>
   <p>Pick a quantum concept to explore its meaning and watch a short video explanation.</p>
 
-  <select id="conceptSelector" onchange="showConcept()" style="padding: 10px; font-size: 16px; border-radius: 8px;">
-    <option value="">-- Select a Concept --</option>
-    <option value="superposition"> Superposition</option>
-    <option value="entanglement"> Entanglement</option>
-    <option value="uncertainty"> Uncertainty Principle</option>
-    <option value="schrodinger"> Schrödinger’s Cat</option>
-    <option value="tunneling">Quantum Tunneling</option>
-    <option value="doubleSlit"> Double Slit Experiment</option>
-  </select>
+  
+  <div id="conceptContainer" style="margin-bottom:10px;"></div>
+<div id="conceptOutput" style="margin-top:10px; color:#ccc; font-size:13px;"></div>
 
-  <div id="conceptContent" style="margin-top: 25px;" class="simulat"></div>
 </section>
 <script>
-  const conceptData = {
-    superposition: {
-      desc: "A particle can be in multiple states (like on/off) at the same time — until it's observed!",
-      video: "https://www.youtube.com/embed/IOYyCHGWJq4"
-    },
-    entanglement: {
-      desc: "When two particles are entangled, changing one affects the other — instantly, even across space!",
-      video: "https://www.youtube.com/embed/ZuvK-od647c"
-    },
-    uncertainty: {
-      desc: "You can't measure a particle's position and momentum both precisely — the more you know one, the less you know the other.",
-      video: "https://www.youtube.com/embed/a8FTr2qMutA"
-    },
-    schrodinger: {
-      desc: "A cat in a box is both alive and dead — until someone opens it. A famous thought experiment about observation.",
-      video: "https://www.youtube.com/embed/UjaAxUO6-Uw"
-    },
-    tunneling: {
-      desc: "Particles can pass through barriers — even if they shouldn't have enough energy to do so!",
-      video: "https://www.youtube.com/embed/CBrsWPCp_rs"
-    },
-    doubleSlit: {
-      desc: "Particles act like waves and interfere with themselves — unless you're watching them!",
-      video: "https://www.youtube.com/embed/A9tKncAdlHQ"
-    }
+const conceptData = {
+  superposition: {
+    desc: "A particle can be in multiple states (like on/off) at the same time — until it's observed!",
+    video: "https://youtube.com/shorts/qOqLg-LP0K8?si=GjJTwo5EP5MITC-F"
+  },
+  entanglement: {
+    desc: "When two particles are entangled, changing one affects the other — instantly, even across space!",
+    video: "https://www.youtube.com/embed/ZuvK-od647c"
+  },
+  uncertainty: {
+    desc: "You can't measure a particle's position and momentum both precisely — the more you know one, the less you know the other.",
+    video: "https://youtube.com/shorts/poy7v1yK-mw?si=d2vEr01HstKkfh9F"
+  },
+  schrodinger: {
+    desc: "A cat in a box is both alive and dead — until someone opens it. A famous thought experiment about observation.",
+    video: "https://youtu.be/OkVpMAbNOAo?si=zJpTO2GENduCzMAm"
+  },
+  tunneling: {
+    desc: "Particles can pass through barriers — even if they shouldn't have enough energy to do so!",
+    video: "https://youtu.be/oPwd5bNMo0Q?si=AfjCuP1ne4SgBfpQ"
+  }
+};
+
+function fixYouTubeLink(original) {
+  if (original.includes("shorts/")) {
+    return original.replace("youtube.com/shorts/", "www.youtube.com/embed/").split("?")[0];
+  }
+  if (original.includes("youtu.be/")) {
+    return original.replace("youtu.be/", "www.youtube.com/embed/").split("?")[0];
+  }
+  return original;
+}
+
+const container = document.getElementById("conceptContainer");
+const output = document.getElementById("conceptOutput");
+
+for (const key in conceptData) {
+  const btn = document.createElement("button");
+  btn.textContent = key.charAt(0).toUpperCase() + key.slice(1);
+  btn.style.margin = "5px";
+  btn.style.padding = "6px 12px";
+  btn.style.fontSize = "12px";
+  btn.style.cursor = "pointer";
+  btn.style.borderRadius = "6px";
+  btn.style.border = "1px solid #0ff";
+  btn.style.backgroundColor = "#000";
+  btn.style.color = "#0ff";
+
+  btn.onclick = () => {
+    const { desc, video } = conceptData[key];
+    const fixedURL = fixYouTubeLink(video);
+    output.innerHTML = `
+      <p style="margin-bottom:10px;">${desc}</p>
+      <iframe width="300" height="170" src="${fixedURL}" 
+        frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen
+        style="border:2px solid #0ff; border-radius:10px;"></iframe>
+    `;
   };
 
-  function showConcept() {
-    const key = document.getElementById("conceptSelector").value;
-    const box = document.getElementById("conceptContent");
+  container.appendChild(btn);
+}
 
-    if (!key || !conceptData[key]) {
-      box.innerHTML = "";
-      return;
-    }
-
-    const { desc, video } = conceptData[key];
-    box.innerHTML = `
-      <p style="margin-bottom: 10px;">${desc}</p>
-      <iframe width="300" height="170" src="${video}" frameborder="0" allowfullscreen></iframe>
-    `;
-  }
 </script>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1172,13 +1271,22 @@ function runUserCode() {
 <h2><i class="fas fa-scale-balanced fa-beat-fade" style="color:#ff6f00;"></i> Quantum Constants & Laws</h2>
   <p>Select a category to explore quantum rules and constants:</p>
   <div class="simulat" style="max-width: 600px; margin: auto;">
-    <select id="quantumCategory" onchange="displayQuantumInfo()" style="width: 100%; padding: 10px;  border-radius: 8px; background: #f9f9f9; color: rgb(0, 11, 11); border: 1px solid  rgb(0, 200, 255);;">
-      <option value="">-- Choose a Category --</option>
-      <option value="laws"> Quantum Laws</option>
-      <option value="constants"> Quantum Constants</option>
-      <option value="physicsConstants"> General Physical Constants</option>
-    </select>
-
+   <select id="quantumCategory" onchange="displayQuantumInfo()" style="
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: linear-gradient(145deg, #111 40%, #222);
+  color: rgb(29, 89, 89);
+  border: 1px solid rgb(0, 200, 255);
+  font-size: 14px;
+  font-family: 'Courier New', monospace;
+  box-shadow: 0 0 8px rgba(0,255,255,0.3);
+  transition: 0.3s ease;
+">
+  <option value="">-- Choose --</option>
+  <option value="laws"> Quantum Laws</option>
+  <option value="constants"> Quantum Constants</option>
+</select>
     <div id="quantumInfo" style="margin-top: 20px; padding: 10px; background: #111; border-radius: 10px; border: 1px solid  rgb(0, 200, 255);"></div>
   </div>
 </section>
@@ -1227,23 +1335,6 @@ function runUserCode() {
         name: "Photon Energy",
         formula: "E = hf",
         description: "Energy of a photon is proportional to its frequency."
-      }
-    ],
-    physicsConstants: [
-      {
-        name: "Speed of Light (c)",
-        formula: "c = 3 × 10⁸ m/s",
-        description: "Used in quantum field theory and relativity."
-      },
-      {
-        name: "Elementary Charge (e)",
-        formula: "e = 1.602 × 10⁻¹⁹ C",
-        description: "Charge of a single electron."
-      },
-      {
-        name: "Boltzmann Constant (k)",
-        formula: "k = 1.38 × 10⁻²³ J/K",
-        description: "Links temperature with energy at the particle level."
       }
     ]
   };
@@ -1399,7 +1490,6 @@ function runUserCode() {
       }
     }
 
-    // Load the first question on page load
     loadQuestion();
   </script>
 
@@ -1474,8 +1564,15 @@ function runUserCode() {
     container.style.display = "block";
   }
 </script>
+<script>
+  window.addEventListener('load', () => {
+    const splash = document.getElementById('splash-screen');
+    setTimeout(() => {
+      splash.style.display = 'none';
+    }, 2500); 
+  });
+</script>
 
-  
 
 
 </body>
